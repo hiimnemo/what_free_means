@@ -51,23 +51,30 @@ html = urlopen(multi_search)
 bs = BeautifulSoup(html.read(), 'html.parser')
 video_title_link = bs.find_all(class_="yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink spf-link")
 uploader = bs.find_all(class_ = r"yt-uix-sessionlink spf-link") #by whom
-date_views = bs.find_all(class_ = r"yt-lockup-meta-info")
+date_views = bs.find_all(class_ = "yt-lockup-meta-info")
 time = bs.find_all(class_ = "accessible-description")
 i = 0
 list_time_since_post = []
 list_views =[]
-for i in range(0, 15):
-    children_date_views = date_views[i].findAll("li", recursive=False)
+for i in range(0, 10):
+    if len(date_views) > 0:
+        # print(date_views)
+        children_date_views = date_views[i].findAll("li", recursive=False)
     # print(len(children_date_views))
-    list_time_since_post = list_time_since_post+ [str(children_date_views[0])]
-    if len(children_date_views) == 1:
-        print(str(i) + " "+title_str(str(video_title_link[i]))+" "+time_since_post(str(list_time_since_post[i]))+ video_length(str(time[i]))+ "\n\n")
-    if len(children_date_views) > 1 :
-        views = num_views(str(children_date_views[1]))
+        # print(children_date_views)
+    
+        # print(len(children_date_views))
+        list_time_since_post = list_time_since_post+ [str(children_date_views[0])]
+        if len(children_date_views) == 1:
+            print(str(i) + " "+title_str(str(video_title_link[i]))+" "+time_since_post(str(list_time_since_post[i]))+ video_length(str(time[i]))+ "\n")
+        if len(children_date_views) > 1 :
+            views = num_views(str(children_date_views[1]))
         # # for i in range(1, 10):
         # print(list_views[0])
-        # views = num_views(str(list_views[i]))
-        print(str(i) + " "+title_str(str(video_title_link[i]))+" "+time_since_post(str(list_time_since_post[i])) + "," + views + video_length(str(time[i])) + "\n\n" )
+            # views = num_views(str(list_views[i]))
+            print(str(i) + " "+title_str(str(video_title_link[i]))+" "+time_since_post(str(list_time_since_post[i])) + "," + views + video_length(str(time[i])) + "\n" )
+    if len(date_views) == 0:
+        print(str(i) + " "+title_str(str(video_title_link[i]))+ video_length(str(time[i])) + "\n")
 
 video_to_be_played = input("select the number: ")
 resolution = input("Enter the resolution you want (in p): ")
@@ -76,3 +83,5 @@ resolution = input("Enter the resolution you want (in p): ")
 well = str(url(str(video_title_link[int(video_to_be_played)])))
 print(well)
 os.system('cmd /c "cd C:\Program Files\VideoLAN\VLC\ & vlc '+'--preferred-resolution='+ resolution+" "+ well)
+bs = None
+html.close()
